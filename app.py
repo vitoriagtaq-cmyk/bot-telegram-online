@@ -19,7 +19,14 @@ app = Flask(__name__)
 
 # Credenciais do Telegram (agora usando variáveis de ambiente)
 API_ID = int(os.getenv('API_ID', '26183526'))
-API_HASH = os.getenv('API_HASH', '07e32e3de152f98a9b96365ecdde76cc')
+API_HASH = os.getenv('API_HASH', 'your_api_hash_here')
+
+# Verificação de configuração
+if API_HASH == 'your_api_hash_here':
+    print("⚠️ AVISO: API_HASH não configurado! Configure as variáveis de ambiente no Render.")
+    print("📋 Variáveis necessárias:")
+    print("   - API_ID: 26183526")
+    print("   - API_HASH: seu_hash_real_aqui")
 
 # Nome do arquivo de sessão
 SESSION_NAME = "bot_refresh_session2"
@@ -37,8 +44,8 @@ MENSAGEM_PADRAO = """
 🔮🔥 𝑽𝑰‌𝑫𝑬𝑶𝑺 𝑽𝑨𝒁𝑨𝑫𝑶𝑺 +𝟭𝟴  
 🔮🔥 𝑪𝑶𝑵𝑻𝑬𝑼‌𝑫𝑶 𝑷𝑹𝑶𝑰𝑩𝑰𝑫𝑶 +𝟭𝟴  
                                     👇  
-[🗂 🔞 ➡️ 𝐃𝐄𝐒𝐁𝐋𝐎𝐐𝐔𝐄𝐈𝐄 𝐒𝐄𝐔 𝐀𝐂𝐄𝐒𝐒𝐎](https://t.me/Sejavipbrasilgrupobot)  
-[🗂 🔞 ➡️ 𝐃𝐄𝐒𝐁𝐋𝐎𝐐𝐔𝐄𝐈𝐄 𝐒𝐄𝐔 𝐀𝐂𝐄𝐒𝐒𝐎](https://t.me/Sejavipbrasilgrupobot)  
+[🗂 🔞 ➡️ 𝐃𝐄𝐒𝐁𝐋𝐎𝐐𝐔𝐄𝐈𝐄 𝐒𝐄𝐔 𝐀𝐂𝐄𝐒𝐒𝐎](https://t.me/Sejavipbrasilgrupobot)
+[🗂 🔞 ➡️ 𝐃𝐄𝐒𝐁𝐋𝐎𝐐𝐔𝐄𝐈𝐄 𝐒𝐄𝐔 𝐀𝐂𝐄𝐒𝐒𝐎](https://t.me/Sejavipbrasilgrupobot)
 """
 
 # Configurações de tempo
@@ -113,6 +120,15 @@ async def bot_main_loop(mensagem_personalizada=None):
     mensagem = mensagem_personalizada or MENSAGEM_PADRAO
     
     try:
+        # Verificar configuração antes de tentar conectar
+        if API_HASH == 'your_api_hash_here':
+            logging.error("❌ ERRO DE CONFIGURAÇÃO: API_HASH não foi configurado!")
+            logging.error("📋 Configure as variáveis de ambiente no Render Dashboard:")
+            logging.error("   - API_ID: 26183526")
+            logging.error("   - API_HASH: seu_hash_real_do_telegram")
+            bot_status['running'] = False
+            return
+            
         client = TelegramClient(SESSION_NAME, API_ID, API_HASH)
         await client.start()
         logging.info("✅ Cliente conectado com sucesso!")
@@ -240,9 +256,29 @@ def get_status():
 def get_logs():
     return jsonify({'logs': bot_status['logs'][-50:]})  # Últimos 50 logs
 
+@app.route('/diagnostico')
+def diagnostico():
+    """Rota de diagnóstico para verificar configuração."""
+    config_status = {
+        'api_id': API_ID,
+        'api_hash_configured': API_HASH != 'your_api_hash_here',
+        'api_hash_value': API_HASH[:10] + '...' if API_HASH != 'your_api_hash_here' else 'NÃO CONFIGURADO',
+        'port': os.environ.get('PORT', '5000'),
+        'environment_vars': {
+            'API_ID': os.getenv('API_ID', 'NÃO DEFINIDO'),
+            'API_HASH': 'CONFIGURADO' if os.getenv('API_HASH') and os.getenv('API_HASH') != 'your_api_hash_here' else 'NÃO CONFIGURADO',
+            'PORT': os.getenv('PORT', 'NÃO DEFINIDO')
+        },
+        'grupos_count': len(GRUPOS_LINKS),
+        'session_name': SESSION_NAME
+    }
+    
+    return jsonify({
+        'status': 'OK' if config_status['api_hash_configured'] else 'ERRO DE CONFIGURAÇÃO',
+        'config': config_status,
+        'message': 'Configuração OK' if config_status['api_hash_configured'] else 'Configure API_HASH no Render Dashboard'
+    })
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-
     app.run(host='0.0.0.0', port=port, debug=False)
-
-
