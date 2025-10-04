@@ -37,8 +37,8 @@ MENSAGEM_PADRAO = """
 🔮🔥 𝑽𝑰‌𝑫𝑬𝑶𝑺 𝑽𝑨𝒁𝑨𝑫𝑶𝑺 +𝟭𝟴  
 🔮🔥 𝑪𝑶𝑵𝑻𝑬𝑼‌𝑫𝑶 𝑷𝑹𝑶𝑰𝑩𝑰𝑫𝑶 +𝟭𝟴  
                                     👇  
-[🗂 🔞 ➡️ 𝐃𝐄𝐒𝐁𝐋𝐎𝐐𝐔𝐄𝐈𝐄 𝐒𝐄𝐔 𝐀𝐂𝐄𝐒𝐒𝐎](https://t.me/botpaymentsofcbot)  
-[🗂 🔞 ➡️ 𝐃𝐄𝐒𝐁𝐋𝐎𝐐𝐔𝐄𝐈𝐄 𝐒𝐄𝐔 𝐀𝐂𝐄𝐒𝐒𝐎](https://t.me/botpaymentsofcbot)  
+[🗂 🔞 ➡️ 𝐃𝐄𝐒𝐁𝐋𝐎𝐐𝐔𝐄𝐈𝐄 𝐒𝐄𝐔 𝐀𝐂𝐄𝐒𝐒𝐎](https://t.me/Sejavipbrasilgrupobot)  
+[🗂 🔞 ➡️ 𝐃𝐄𝐒𝐁𝐋𝐎𝐐𝐔𝐄𝐈𝐄 𝐒𝐄𝐔 𝐀𝐂𝐄𝐒𝐒𝐎](https://t.me/Sejavipbrasilgrupobot)  
 """
 
 # Configurações de tempo
@@ -244,3 +244,4 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
 
     app.run(host='0.0.0.0', port=port, debug=False)
+
